@@ -27,14 +27,34 @@ let A = [
 
 let b = [2, 4, 2, 4]
 
+// Exemplo de duas fases com solução inviável
+// const op = 'max'
+// let c = [-1, -1, 0, 0, M, M]
+
+// let A = [
+//   [1, -1, -1, 0, 1, 0],
+//   [-3, 2, 0, -1, 0, 1],
+// ]
+
+// let b = [2, 12]
+
 // Exemplo de uma fase com solução ótima
-// const op = 'min'
+// const op = 'max'
 // let c = [-1, -1, 0, 0]
 // let A = [
 //   [24, 16, 1, 0],
 //   [5, 10, 0, 1],
 // ]
 // let b = [96, 45]
+
+// Exemplo de uma fase com solução ilimitada
+// const op = 'max'
+// let c = [-1, -2, 0, 0]
+// let A = [
+//   [-1 / 3, 1, 1, 0],
+//   [-1, 3, 0, 1],
+// ]
+// let b = [40, 60]
 
 /* 
   Método que contrói o vetor de custo sem os custos artificiais
@@ -212,6 +232,10 @@ function simplex(c, A, b, custosReduzidosPreviamenteCalculados, bases) {
     const indiceColunaPivo = verificaQuemSaiDaBase(custosReduzidos)
     const indiceLinhaPivo = verificaQuemEntraNaBase(indiceColunaPivo)
 
+    if (indiceLinhaPivo === -1 || indiceColunaPivo === -1) {
+      return console.log('Não há variável pra sair da base, solução ilimitada')
+    }
+
     const { novaA, novoB } = atualizaMatrizAeVetorB(
       indiceLinhaPivo,
       indiceColunaPivo,
@@ -314,6 +338,13 @@ function simplexDuasFases(c, A, b) {
       console.log('cra: ', custosReduzidosArtificial)
 
       contadorIteracao++
+    }
+
+    // Verifica se existem variáveis artificiais na base
+    if (bases.some((x) => c[x] === M)) {
+      return console.log(
+        'Problema inviável, existem variáveis artificiais na base',
+      )
     }
 
     console.log('Fim da primeira fase. Iniciando segunda fase...')
